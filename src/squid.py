@@ -17,3 +17,7 @@ class Squid:
 
         return pos in self.positions
 
+    def overlapsWith(self, other):
+        assert isinstance(other, Squid), "Invalid parameter type"
+
+        return any([i in self.positions for i in other.positions])

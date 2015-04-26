@@ -29,5 +29,13 @@ class SquidTest(unittest.TestCase):
         self.assertTrue(squid.contains(containedPosition), "Contained position indicated as not contained")
         self.assertFalse(squid.contains(nonContainedPosition), "Non-contained position indicated as contained")
 
+    def test_overlap(self):
+        squid1 = Squid([(0,0), (1,0)])
+        squid2 = Squid([(0,0), (0,1)])
+        squid3 = Squid([(3,3), (3,4)])
+
+        self.assertTrue(squid1.overlapsWith(squid2), "Squid indicated as not overlapping when they are")
+        self.assertFalse(squid1.overlapsWith(squid3), "Squid indicated as overlapping when they are not")
+
 if __name__ == "__main__":
     unittest.main()
