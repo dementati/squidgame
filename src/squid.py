@@ -21,3 +21,6 @@ class Squid:
         assert isinstance(other, Squid), "Invalid parameter type"
 
         return any([i in self.positions for i in other.positions])
+
+    def getPositions(self):
+        return self.positions

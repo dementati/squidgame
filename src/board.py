@@ -18,6 +18,9 @@ class Board:
     def getSize(self):
         return self.size
 
+    def getAllSquid(self):
+        return self.squidList
+
     def addSquid(self, squid):
         assert isinstance(squid, Squid), "Invalid parameter type"
 

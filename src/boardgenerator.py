@@ -48,7 +48,11 @@ class BoardGenerator:
                 for i in range(squidLength):
                     positions.append((startPos[0] + i * direction[0], startPos[1] + i * direction[1]))
                 squid = Squid(positions)
-                board.addSquid(squid)
+
+                if any([otherSquid.overlapsWith(squid) for otherSquid in board.getAllSquid()]):
+                    direction = None
+                else:
+                    board.addSquid(squid)
 
         return board 
 
