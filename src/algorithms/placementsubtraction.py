@@ -1,5 +1,6 @@
 from collections import Counter
 import copy
+from ..squid import Squid
 
 class Board:
     def __init__(self):
@@ -82,20 +83,3 @@ class Board:
             bm, br = temp.findBestMove()
             print(str(bm) + ", " + str(br))
             temp.check(bm)
-
-class Squid:
-    def __init__(self):
-        self.placements = []
-
-    def __eq__(self, other):
-        return Counter(self.placements) == Counter(other.placements)
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def contains(self, pos):
-        return pos in self.placements
-
-
-
-
