@@ -37,5 +37,25 @@ class SquidTest(unittest.TestCase):
         self.assertTrue(squid1.overlapsWith(squid2), "Squid indicated as not overlapping when they are")
         self.assertFalse(squid1.overlapsWith(squid3), "Squid indicated as overlapping when they are not")
 
+    def test_isStraight(self):
+        squid1Positions = [(0,0), (1,0), (2,0)]
+        squid2Positions = [(0,0), (1,0), (1,1)]
+        squid3Positions = [(0,0), (0,1), (0,2)]
+
+        self.assertTrue(Squid.isStraight(squid1Positions), "Squid indicated as not straight when it is")
+        self.assertFalse(Squid.isStraight(squid2Positions), "Squid indicated as straight when it is not")
+        self.assertTrue(Squid.isStraight(squid3Positions), "Squid indicated as not straight when it is")
+        
+    def test_isCoherent(self):
+        squid1Positions = [(0,0), (1,0), (2,0)]
+        squid2Positions = [(0,0), (0,1), (0,2)]
+        squid3Positions = [(0,0), (2,0), (3,0)]
+        squid4Positions = [(0,0), (0,2), (0,3)]
+
+        self.assertTrue(Squid.isCoherent(squid1Positions), "Squid is indicated as incoherent when it is not")
+        self.assertTrue(Squid.isCoherent(squid2Positions), "Squid is indicated as incoherent when it is not")
+        self.assertFalse(Squid.isCoherent(squid3Positions), "Squid is indicated as coherent when it is not")
+        self.assertFalse(Squid.isCoherent(squid4Positions), "Squid is indicated as coherent when it is not")
+
 if __name__ == "__main__":
     unittest.main()
