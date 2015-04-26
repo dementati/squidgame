@@ -49,6 +49,27 @@ class BoardTest(unittest.TestCase):
                 else:
                     self.assertEqual(self.board.getState(pos), State.EMPTY, "Invalid board state")
 
+    def test_renderBoards(self):
+        squid = Squid([(0,0), (0,1)])
+        self.board.addSquid(squid)
+        self.board.fire((3,3))
+        self.board.fire((0,1))
+
+        print
+        self.board.render()
+        print
+
+    def test_isOutOfBounds(self):
+        self.assertTrue(self.board.isOutOfBounds((-1,0)), "Position indicated as not out of bounds when it is")
+        self.assertTrue(self.board.isOutOfBounds((0,-1)), "Position indicated as not out of bounds when it is")
+        self.assertTrue(self.board.isOutOfBounds((-1,-1)), "Position indicated as not out of bounds when it is")
+        self.assertTrue(self.board.isOutOfBounds((8,7)), "Position indicated as not out of bounds when it is")
+        self.assertTrue(self.board.isOutOfBounds((7,8)), "Position indicated as not out of bounds when it is")
+        self.assertTrue(self.board.isOutOfBounds((8,8)), "Position indicated as not out of bounds when it is")
+        self.assertFalse(self.board.isOutOfBounds((0,0)), "Position indicated as out of bounds when it isn't")
+        self.assertFalse(self.board.isOutOfBounds((7,0)), "Position indicated as out of bounds when it isn't")
+        self.assertFalse(self.board.isOutOfBounds((0,7)), "Position indicated as out of bounds when it isn't")
+        self.assertFalse(self.board.isOutOfBounds((7,7)), "Position indicated as out of bounds when it isn't")
 
 if __name__ == "__main__":
     unittest.main()
