@@ -1,9 +1,13 @@
+from collections import Counter
+
 class Squid:
-    def __init__(self):
-        self.placements = []
+    def __init__(self, positions):
+        assert isinstance(positions, list)
+
+        self.positions = positions
 
     def __eq__(self, other):
-        return Counter(self.placements) == Counter(other.placements)
+        return Counter(self.positions) == Counter(other.positions)
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -11,5 +15,5 @@ class Squid:
     def contains(self, pos):
         assert isinstance(pos, tuple), "Invalid parameter type"
 
-        return pos in self.placements
+        return pos in self.positions
 
