@@ -1,4 +1,3 @@
-from collections import Counter
 import copy
 from ..squid import Squid
 
