@@ -1,3 +1,4 @@
+import util
 from collections import Counter
 
 class Squid:
@@ -8,21 +9,13 @@ class Squid:
 
         self.positions = positions
         
-        assert Squid.isStraight(self.positions), "Squid must be straight"
-        assert Squid.isCoherent(self.positions), "Squid must be coherent"
-
-    @staticmethod
-    def isStraight(positions):
-        return all([positions[0][0] == pos[0] for pos in positions]) or all([positions[0][1] == pos[1] for pos in positions])
-
-    @staticmethod
-    def isCoherent(positions):
-        xs = sorted([x for (x,y) in positions])
-        ys = sorted([y for (x,y) in positions])
-
-        return xs == range(xs[0], xs[-1]+1) or ys == range(ys[0], ys[-1]+1)
+        assert util.isStraight(self.positions), "Squid must be straight"
+        assert util.isCoherent(self.positions), "Squid must be coherent"
 
     def __eq__(self, other):
+        if other == None:
+            return False
+
         return Counter(self.positions) == Counter(other.positions)
 
     def __ne__(self, other):
