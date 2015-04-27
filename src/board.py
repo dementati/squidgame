@@ -1,6 +1,7 @@
 import sys
 from enum import enum
 from squid import Squid
+import logging
 
 State = enum('EMPTY', 'MISS', 'HIT')
 
@@ -29,11 +30,15 @@ class Board:
     def fire(self, (x,y)):
         assert not self.isOutOfBounds((x, y)), "Position out of bounds"
 
+        logging.debug("Firing on %s", str((x,y)))
+
         for squid in self.squidList:
             if squid.contains((x,y)):
+                logging.debug("Hit squid")
                 self.board[x][y] = State.HIT
                 return State.HIT
 
+        logging.debug("It was a miss")
         self.board[x][y] = State.MISS
         return State.MISS
 
@@ -54,3 +59,11 @@ class Board:
 
     def isOutOfBounds(self, (x,y)):
         return x < 0 or x >= self.size[0] or y < 0 or y >= self.size[1]
+
+    def isWon(self):
+        return all([all([self.getState(pos) == State.HIT for pos in squid.getPositions()]) for squid in self.squidList])
+
+    def isSquidDestroyed(self, squid):
+        assert squid in self.squidList, "Supplied squid is not on the board"
+
+        return all([self.getState(pos) == State.HIT for pos in squid.getPositions()])

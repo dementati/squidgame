@@ -71,5 +71,33 @@ class BoardTest(unittest.TestCase):
         self.assertFalse(self.board.isOutOfBounds((0,7)), "Position indicated as out of bounds when it isn't")
         self.assertFalse(self.board.isOutOfBounds((7,7)), "Position indicated as out of bounds when it isn't")
 
+    def test_isWon(self):
+        # GIVEN
+        squid = Squid([(0,0), (0,1)])
+        self.board.addSquid(squid)
+        board2 = Board()
+        board2.addSquid(squid)
+
+        board2.fire((0,0))
+        board2.fire((0,1))
+
+        # THEN
+        self.assertFalse(self.board.isWon(), "Game indicated to be won when it is not")
+        self.assertTrue(board2.isWon(), "Game indicated not to be won when it is")
+
+    def test_isSquidDestroyed(self):
+        # GIVEN
+        squid = Squid([(0,0), (0,1)])
+        self.board.addSquid(squid)
+        board2 = Board()
+        board2.addSquid(squid)
+
+        board2.fire((0,0))
+        board2.fire((0,1))
+
+        # THEN
+        self.assertFalse(self.board.isSquidDestroyed(squid), "Squid indicated to be destroyed when it is not")
+        self.assertTrue(board2.isSquidDestroyed(squid), "Squid indicated to be destroyed when it is")
+
 if __name__ == "__main__":
     unittest.main()
