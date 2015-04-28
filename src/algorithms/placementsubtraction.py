@@ -1,27 +1,33 @@
-import copy
+import movealgorithm
+from .. import board as b
+from ..board import Board
 from ..squid import Squid
+import logging
 
-class Board:
-    def __init__(self):
-        self.squidLengths = [2, 3, 4]
-        self.board = [[False for x in range(8)] for x in range(8)]
+class PlacementSubtraction(movealgorithm.MoveAlgorithm):
+
+    def __init__(self, board, squidLengths):
+        assert isinstance(board, Board), "Invalid parameter type"
+        assert isinstance(squidLengths, list), "Invalid parameter type"
+
+        self.squidLengths = squidLengths
+        self.board = board
         self.countPlacementsOnBoard()
 
-    def checked(self, (x,y)):
-        return self.board[x][y]
+    def countPlacementsOnBoard(self):
+        logging.debug("Counting placements on board")
+        self.placements = []
+        for y in range(8):
+            for x in range(8):
+                pos = (x,y)
+                for squidLength in self.squidLengths:
+                    self.countPlacementsOnPosition(pos, squidLength)
 
-    def check(self, (x,y)):
-        self.board[x][y] = True
-        self.countPlacementsOnBoard()
-
-    def uncheck(self, (x,y)):
-        self.board[x][y] = False
-        self.countPlacementsOnBoard()
-
-    def outOfBounds(self, (x,y)):
-        return x < 0 or x > 7 or y < 0 or y > 7
+        self.dirty = False
+        return len(self.placements)
 
     def countPlacementsOnPosition(self, (x, y), squidLength):
+        logging.debug("Counting placements on positions %s" % str((x,y)))
         for axis in ["x", "y"]:
             for start in range(-squidLength+1, 1):
                 squid = Squid()
@@ -32,11 +38,11 @@ class Board:
                     else:
                         pos = (x, y + start + i)
 
-                    if self.outOfBounds(pos) or self.checked(pos):
+                    if self.board.isOutOfBounds(pos) or self.board.getState(pos) != b.State.EMPTY:
                         complete = False
                         break
                     else:
-                        squid.placements.append(pos)
+                        squid.getPositions().append(pos)
                 
                 if complete:
                     if not squid in self.placements:
@@ -50,35 +56,20 @@ class Board:
 
         return count
 
-    def countPlacementsOnBoard(self):
-        self.placements = []
-        for y in range(8):
-            for x in range(8):
-                pos = (x,y)
-                for squidLength in self.squidLengths:
-                    self.countPlacementsOnPosition(pos, squidLength)
-
-        self.dirty = False
-        return len(self.placements)
-
-    def findBestMove(self):
+    def placementSubtraction(self, board):
         bestMove = None
         bestReduction = 0
 
         for y in range(8):
             for x in range(8):
                 pos = (x,y)
-                if not self.checked(pos):
+                if board.getState(pos) == b.State.EMPTY:
                     reduction = self.countRemovablePlacements(pos)
                     if reduction > bestReduction:
                         bestMove = pos
                         bestReduction = reduction
         
-        return bestMove, bestReduction
+        return bestMove
 
-    def findBestPath(self, moves):
-        temp = copy.deepcopy(self)
-        for i in range(moves):
-            bm, br = temp.findBestMove()
-            print(str(bm) + ", " + str(br))
-            temp.check(bm)
+    def findNextMove(self, board):
+        return self.placementSubtraction(board)

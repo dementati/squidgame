@@ -3,6 +3,9 @@ from ..src.squid import *
 
 class SquidTest(unittest.TestCase):
 
+    def setUp(self):
+        logging.basicConfig(level=logging.DEBUG)
+
     def test_equality(self):
         # GIVEN
         squid1 = Squid([(0,0), (1,0)])
@@ -38,6 +41,8 @@ class SquidTest(unittest.TestCase):
         self.assertTrue(squid1.overlapsWith(squid2), "Squid indicated as not overlapping when they are")
         self.assertFalse(squid1.overlapsWith(squid3), "Squid indicated as overlapping when they are not")
 
+    def test_createEmpty(self):
+        squid = Squid()
     
 if __name__ == "__main__":
     unittest.main()

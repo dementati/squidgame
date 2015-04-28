@@ -1,16 +1,17 @@
 import util
 from collections import Counter
+import logging
 
 class Squid:
-    def __init__(self, positions):
-        assert isinstance(positions, list), "Invalid parameter type"
-        assert len(positions) > 0, "Squid cannot have zero length"
-        
+    def __init__(self, positions = []):
+        if positions != []:
+            assert isinstance(positions, list), "Invalid parameter type"
+            assert len(positions) > 0, "Squid cannot have zero length"
+            logging.debug("Positions: %s" % positions)
+            assert util.isStraight(positions), "Squid must be straight"
+            assert util.isCoherent(positions), "Squid must be coherent"
 
         self.positions = positions
-        
-        assert util.isStraight(self.positions), "Squid must be straight"
-        assert util.isCoherent(self.positions), "Squid must be coherent"
 
     def __eq__(self, other):
         if other == None:
@@ -20,6 +21,9 @@ class Squid:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __len__(self):
+        return len(self.positions)
 
     def contains(self, pos):
         assert isinstance(pos, tuple), "Invalid parameter type"

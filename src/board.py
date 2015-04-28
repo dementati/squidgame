@@ -22,6 +22,9 @@ class Board:
     def getAllSquid(self):
         return self.squidList
 
+    def getLiveSquid(self):
+        return [squid for squid in self.squidList if not self.isSquidDestroyed(squid)]
+
     def addSquid(self, squid):
         assert isinstance(squid, Squid), "Invalid parameter type"
 
