@@ -9,7 +9,7 @@ import logging
 def average(l):
     return float(sum(l))/len(l) if len(l) > 0 else float('nan')
 
-def printStatistics(name, wg, wgm, runs=1000, maxMoves=24):
+def printStatistics(name, wg, wgm, runs, maxMoves=24):
     print
     print "* %s" % name
     print "Won games: %d/%d" % (wg, runs)
@@ -23,14 +23,14 @@ class SimulatorTest(unittest.TestCase):
 
     def setUp(self):
         self.runs = 1000
-        logging.basicConfig(level=logging.DEBUG)
+        #logging.basicConfig(level=logging.DEBUG)
 
     def test_randomSearch(self):
-        #self.runTest(lambda: RandomSearch(), "RandomSearch")
+        self.runTest(lambda: RandomSearch(), "RandomSearch")
         pass
 
     def test_randomSearchAndDestroy(self):
-        #self.runTest(lambda: RandomSearchAndDestroy(), "RandomSearchAndDestroy")
+        self.runTest(lambda: RandomSearchAndDestroy(), "RandomSearchAndDestroy")
         pass
 
     def test_placementSubtractionAndDestroy(self):

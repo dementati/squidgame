@@ -49,7 +49,7 @@ class Destroy(movealgorithm.MoveAlgorithm):
         assert hitSquid != None, "No squid at last targeted position"
 
         if board.isSquidDestroyed(hitSquid):
-            logging.debug("Targeted squid destroyed, switching state to SEARCHING")
+            logging.debug("Targeted squid destroyed")
             return movealgorithm.StatusCode.COMPLETED 
 
         neighbours = [(t[0] - 1, t[1]) , (t[0] + 1, t[1]), (t[0], t[1] - 1), (t[0], t[1] + 1)]

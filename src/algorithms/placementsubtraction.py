@@ -3,8 +3,11 @@ from .. import board as b
 from ..board import Board
 from ..squid import Squid
 import logging
+import copy
 
 class PlacementSubtraction(movealgorithm.MoveAlgorithm):
+
+    placementsTemplate = None
 
     def __init__(self, board, squidLengths):
         assert isinstance(board, Board), "Invalid parameter type"
@@ -12,25 +15,24 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
 
         self.squidLengths = squidLengths
         self.board = board
-        self.countPlacementsOnBoard()
+
+        if PlacementSubtraction.placementsTemplate == None:
+            self.countPlacementsOnBoard()
+
+        self.placements = copy.deepcopy(PlacementSubtraction.placementsTemplate)
 
     def countPlacementsOnBoard(self):
-        logging.debug("Counting placements on board")
-        self.placements = []
+        PlacementSubtraction.placementsTemplate = []
         for y in range(8):
             for x in range(8):
                 pos = (x,y)
                 for squidLength in self.squidLengths:
                     self.countPlacementsOnPosition(pos, squidLength)
 
-        self.dirty = False
-        return len(self.placements)
-
     def countPlacementsOnPosition(self, (x, y), squidLength):
-        logging.debug("Counting placements on positions %s" % str((x,y)))
         for axis in ["x", "y"]:
             for start in range(-squidLength+1, 1):
-                squid = Squid()
+                squid = Squid([])
                 complete = True
                 for i in range(squidLength):
                     if axis == "x":
@@ -45,8 +47,8 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
                         squid.getPositions().append(pos)
                 
                 if complete:
-                    if not squid in self.placements:
-                        self.placements.append(squid)
+                    if not squid in PlacementSubtraction.placementsTemplate:
+                        PlacementSubtraction.placementsTemplate.append(squid)
 
     def countRemovablePlacements(self, pos):
         count = 0
@@ -55,6 +57,12 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
                 count += 1
 
         return count
+
+    def removePlacements(self, pos):
+        self.placements = [squid for squid in self.placements if not squid.contains(pos)]
+
+    def updateSquidLengths(self, squidLengths):
+        self.placements = [squid for squid in self.placements if len(squid) in squidLengths]
 
     def placementSubtraction(self, board):
         bestMove = None
@@ -68,7 +76,8 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
                     if reduction > bestReduction:
                         bestMove = pos
                         bestReduction = reduction
-        
+       
+        self.removePlacements(bestMove)
         return bestMove
 
     def findNextMove(self, board):
