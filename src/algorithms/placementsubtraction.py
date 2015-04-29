@@ -13,23 +13,26 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
         assert isinstance(board, Board), "Invalid parameter type"
         assert isinstance(squidLengths, list), "Invalid parameter type"
 
-        self.squidLengths = squidLengths
-        self.board = board
-
         if PlacementSubtraction.placementsTemplate == None:
-            self.countPlacementsOnBoard()
+            PlacementSubtraction.placementsTemplate = PlacementSubtraction.countPlacementsOnBoard(board, squidLengths)
 
         self.placements = copy.deepcopy(PlacementSubtraction.placementsTemplate)
 
-    def countPlacementsOnBoard(self):
-        PlacementSubtraction.placementsTemplate = []
+    @staticmethod
+    def countPlacementsOnBoard(board, squidLengths):
+        placements = []
         for y in range(8):
             for x in range(8):
                 pos = (x,y)
-                for squidLength in self.squidLengths:
-                    self.countPlacementsOnPosition(pos, squidLength)
+                for squidLength in squidLengths:
+                    posPlacements = PlacementSubtraction.countPlacementsOnPosition(board, pos, squidLength)
+                    placements += [p for p in posPlacements if not p in placements]
+                    
+        return placements
 
-    def countPlacementsOnPosition(self, (x, y), squidLength):
+    @staticmethod
+    def countPlacementsOnPosition(board, (x, y), squidLength):
+        placements = []
         for axis in ["x", "y"]:
             for start in range(-squidLength+1, 1):
                 squid = Squid([])
@@ -40,15 +43,15 @@ class PlacementSubtraction(movealgorithm.MoveAlgorithm):
                     else:
                         pos = (x, y + start + i)
 
-                    if self.board.isOutOfBounds(pos) or self.board.getState(pos) != b.State.EMPTY:
+                    if board.isOutOfBounds(pos) or board.getState(pos) != b.State.EMPTY:
                         complete = False
                         break
                     else:
                         squid.getPositions().append(pos)
                 
                 if complete:
-                    if not squid in PlacementSubtraction.placementsTemplate:
-                        PlacementSubtraction.placementsTemplate.append(squid)
+                    placements.append(squid)
+        return placements
 
     def countRemovablePlacements(self, pos):
         count = 0
